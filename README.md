@@ -1,14 +1,29 @@
-# Good Browser Games
+---
+title: "Good Browser Games"
+author: "Mack pro"
+---
 
-Projeto desenvolvido para a matéria **Prática Profissional em Análise e Desenvolvimento de Sistemas**, do quinto período do curso de _Análise e Desenvolvimento de Sistemas_ da _Universidade Presbiteriana Mackenzie_, ministrada pelo professor _Tomaz Mikio Sasaki_.
+**Índice**
 
-## Descrição
+- [1. Introdução](#1-introdução)
+- [2. Escopo do projeto](#2-escopo-do-projeto)
+- [3. Requisitos do projeto](#3-requisitos-do-projeto)
+- [4. Ingrantes do grupo](#4-integrantes-do-grupo)
 
-**GoodBrowserGames** deverá ser uma comunidade web onde seus membros poderão compartilhar as suas impressões sobre os browser gamers que já jogaram, identificando o que gostaram e o que não gostaram. Com estas informações, o **GoodBrowserGames** poderá dar para cada membro recomendações de browser games que ele ainda não conhece e que provavelmente irá gostar.
+## 1. Introdução
+
+Esse projeto está sendo desenvolvido para matéria de **Prática Profissional em Análise e Desenvolvimento de Sistemas**, do quinto período do curso de _Análise e Desenvolvimento de Sistemas_ da _Universidade Presbiteriana Mackenzie_, ministrada pelo professor _Tomaz Mikio Sasaki_.
+
+O projeto consiste desenvolvimento de um novo sistema web de indicação e catalogação de jogos de navegador. 
+
+O **GoodBrowserGames** deverá ser uma comunidade web onde seus membros poderão compartilhar as suas impressões sobre os browser gamers que já jogaram, identificando o que gostaram e o que não gostaram. 
+
+Com estas informações, o **GoodBrowserGames** poderá dar para cada membro recomendações de browser games que ele ainda não conhece e que provavelmente irá gostar.
 
 
-## Funcionamento
+## 2. Escopo do projeto
 
+O escopo desse projeto é um sistema web que permite o usuário conhecer, cadastrar e avaliar jogos de navegadores. O projeto deverá seguir os seguinte story points definidos pelo professor da matéria: 
 
 1. O administrador do **GoodBrowserGames** será responsável por cadastrar os _browser games_ que serão avaliados pelos membros.
 
@@ -37,12 +52,12 @@ Projeto desenvolvido para a matéria **Prática Profissional em Análise e Desen
 período);<br>
      - 3 categorias que receberam maior número de avaliações.
      
-## Requisitos do projeto
+## 3. Requisitos do projeto
 
 a) O **GoodBrowserGames** deverá ser colocado em operação como uma aplicação web.<br>
 b) Os dados do **GoodBrowserGames** deverão ser persistidos em uma base de dados (relacional ou NoSQL).<br>
 
-## Integrantes do grupo
+## 4. Integrantes do grupo
 
 Alexandre Ricci Preuss - 19508387 <br>
 Guilherme G Chaves - 20014481<br>
