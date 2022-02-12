@@ -8,7 +8,7 @@ author: "Mack pro"
 - [1. Introdução](#1-introdução)
 - [2. Escopo do projeto](#2-escopo-do-projeto)
 - [3. Requisitos do projeto](#3-requisitos-do-projeto)
-- [4. Ingrantes do grupo](#4-integrantes-do-grupo)
+- [4. Integrantes do grupo](#4-integrantes-do-grupo)
 
 ## 1. Introdução
 
