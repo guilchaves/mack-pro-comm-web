@@ -1,8 +1,8 @@
-const express = require('express')
-const router = require('./config/route')
-const app = express()
+const customExpress = require('./config/customExpress')
 
-app.use(express.json())
-app.use(router)
+const app = customExpress()
+const port = 3000
 
-app.listen(3000)
+app.listen(port, (req, res) => {
+  console.log(`Server up and running at port ${port}`)
+})
