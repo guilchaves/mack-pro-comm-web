@@ -1,0 +1,5 @@
+CONNECTION_STRING = postgres://hbyspwzd:0dI3TsfolCKAyBi5CrsZGfOZIQwJyJXr@tuffi.db.elephantsql.com/hbyspwzd
+HOST = tuffi.db.elephantsql.com
+USER = hbyspwzd
+PASSWORD = 0dI3TsfolCKAyBi5CrsZGfOZIQwJyJXr
+DATABASE = hbyspwzd
