@@ -46,10 +46,8 @@ module.exports = {
       url_imagem,
       url_demo
     }, { where: { id } })
-      .then(() => Game.findByPk(id))
-      .then(game => res.json(game))
 
-    // return res.json({ messege: 'Informações do jogo alteradas' })
+    return res.json({ messege: 'Informações do jogo alteradas' })
   },
 
   async delete(req, res) {
