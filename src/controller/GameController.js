@@ -2,7 +2,11 @@ const Game = require('../models/Game')
 
 module.exports = {
   async getAll(req, res) {
-    const games = await Game.findAll()
+    const games = await Game.findAll({
+      include: {
+        association: 'categoria'
+      }
+    })
 
     return res.json(games)
   },
@@ -10,7 +14,11 @@ module.exports = {
   async getGame(req, res) {
     const { id } = req.params
 
-    const game = await Game.findByPk(id)
+    const game = await Game.findByPk(id, {
+      include: {
+        association: 'categoria'
+      }
+    })
 
     return res.json(game)
   },
@@ -27,7 +35,9 @@ module.exports = {
       url_demo
     })
 
-    return res.json(game)
+    const newGame = await Game.findByPk(game.id, { include: { association: 'categoria' } })
+
+    return res.json(newGame)
   },
 
   async update(req, res) {
