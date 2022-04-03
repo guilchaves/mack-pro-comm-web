@@ -1,4 +1,3 @@
-const { json } = require('express/lib/response')
 const Category = require('../models/Category')
 
 module.exports = {
