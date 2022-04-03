@@ -1,5 +1,5 @@
+require('dotenv').config()
 require('./database')
 const server = require('./app')
-const port = process.env.PORT || 3000
 
-server.listen(port)
+server.listen(process.env.PORT || 3000)

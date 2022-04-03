@@ -1,12 +1,11 @@
-// const connectionString = 'postgres://hbyspwzd:0dI3TsfolCKAyBi5CrsZGfOZIQwJyJXr@tuffi.db.elephantsql.com/hbyspwzd'
-// const database = postgres(connectionString)
+require('dotenv').config()
 
 module.exports = {
     dialect: 'postgres',
-    host: 'localhost',
-    username: 'postgres',
-    password: 'postgres',
-    database: 'test',
+    host: process.env.HOST,
+    username: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
     define: {
         timestamps: false,
         underscored: true
