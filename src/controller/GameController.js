@@ -2,7 +2,11 @@ const Game = require('../models/Game')
 
 module.exports = {
   async getAll(req, res) {
-    const games = await Game.findAll()
+    const games = await Game.findAll({
+      include: {
+        association: 'categoria'
+      }
+    })
 
     return res.json(games)
   },
