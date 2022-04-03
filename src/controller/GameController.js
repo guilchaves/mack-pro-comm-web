@@ -14,7 +14,11 @@ module.exports = {
   async getGame(req, res) {
     const { id } = req.params
 
-    const game = await Game.findByPk(id)
+    const game = await Game.findByPk(id, {
+      include: {
+        association: 'categoria'
+      }
+    })
 
     return res.json(game)
   },
