@@ -35,7 +35,9 @@ module.exports = {
       url_demo
     })
 
-    return res.json(game)
+    const newGame = await Game.findByPk(game.id, { include: { association: 'categoria' } })
+
+    return res.json(newGame)
   },
 
   async update(req, res) {
