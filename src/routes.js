@@ -7,7 +7,10 @@ const routes = express.Router()
 
 // rotas de categoria
 routes.get('/categorias', CategoryController.getAll)
+routes.get('/categorias/:id', CategoryController.getCategory)
 routes.post('/categorias', CategoryController.insert)
+routes.put('/categorias/:id', CategoryController.update)
+routes.delete('/categorias/:id', CategoryController.delete)
 
 //rotas de jogo
 routes.get('/jogos', GameController.getAll)
