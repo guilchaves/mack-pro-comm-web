@@ -43,5 +43,5 @@ module.exports = {
     await Category.destroy({ where: { id } })
 
     return res.json({ messege: 'Categoria deletada com sucesso' })
-  },
+  }
 }
