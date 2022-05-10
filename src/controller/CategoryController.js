@@ -1,46 +1,63 @@
-const { json } = require('express/lib/response')
 const Category = require('../models/Category')
 
 module.exports = {
   async getAll(req, res) {
-    const categories = await Category.findAll()
+    try {
+      const categories = await Category.findAll()
 
-    return res.json(categories)
+      return res.json(categories)
+    } catch (err) {
+      console.log(err)
+    }
   },
 
   async insert(req, res) {
-    const { nome } = req.body
+    try {
+      const { nome } = req.body
+      const category = await Category.create({ nome })
 
-    const category = await Category.create({ nome })
-
-    return res.json(category)
+      return res.json(category)
+    } catch (err) {
+      console.log(err)
+    }
   },
 
   async getCategory(req, res) {
-    const { id } = req.params
+    try {
+      const { id } = req.params
+      const category = await Category.findByPk(id)
 
-    const category = await Category.findByPk(id)
-
-    return res.json(category)
+      return res.json(category)
+    } catch (err) {
+      console.log(err)
+    }
   },
 
   async update(req, res) {
-    const { nome} = req.body
-    const { id } = req.params
+    try {
+      const { nome } = req.body
+      const { id } = req.params
 
-    await Category.update({
-      nome
-    }, { where: { id } })
-
-    return res.json({ messege: 'Informações da categoria alteradas' })
+      await Category.update(
+        {
+          nome,
+        },
+        { where: { id } }
+      )
+      return res.json({ messege: 'Informações da categoria alteradas' })
+    } catch (err) {
+      console.log(err)
+    }
   },
 
   async delete(req, res) {
-    const { id } = req.params
+    try {
+      const { id } = req.params
+      await Category.destroy({ where: { id } })
 
-    await Category.destroy({ where: { id } })
-
-    return res.json({ messege: 'Categoria deletada com sucesso' })
-  }
-
+      return res.json({ messege: 'Categoria deletada com sucesso' })
+    } catch (err) {
+      console.log(err)
+    }
+  },
 }
