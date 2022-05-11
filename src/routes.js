@@ -15,7 +15,7 @@ routes.delete('/categorias/:id', CategoryController.delete)
 
 // rotas de jogo
 routes.get('/jogos', GameController.getAll)
-routes.get('/jogos/:id', GameController.getGame)
+routes.get('/jogos/:nome', GameController.getGamesByName)
 routes.post('/jogos', GameController.insert)
 routes.put('/jogos/:id', GameController.update)
 routes.delete('/jogos/:id', GameController.delete)
