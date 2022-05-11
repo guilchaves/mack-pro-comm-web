@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const Game = require('../models/Game')
 
 module.exports = {
@@ -15,15 +16,24 @@ module.exports = {
     }
   },
 
-  async getGame(req, res) {
+  async getGamesByName(req, res) {
     try {
-      const { id } = req.params
+      const { nome } = req.params
 
-      const game = await Game.findByPk(id, {
-        include: {
-          association: 'categoria',
+      const game = await Game.findAll({
+        where: {
+          nome: {
+            [Op.iLike]: `%${nome}%`
+          }
         },
+        include: {
+          association: 'categoria'
+        }
       })
+
+      if (!game) {
+        return res.status(404).json({ messege: 'Nenhum jogo encontrado.' })
+      }
 
       return res.json(game)
     } catch (err) {

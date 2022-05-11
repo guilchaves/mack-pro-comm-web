@@ -2,10 +2,10 @@ require('dotenv').config()
 
 module.exports = {
   dialect: 'postgres',
-  host: 'tuffi.db.elephantsql.com',
-  username: 'hbyspwzd',
-  password: '0dI3TsfolCKAyBi5CrsZGfOZIQwJyJXr',
-  database: 'hbyspwzd',
+  host: process.env.HOST,
+  username: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
   define: {
     timestamps: false,
     underscored: true,
