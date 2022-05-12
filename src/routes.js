@@ -23,5 +23,6 @@ routes.delete('/jogos/:id', GameController.delete)
 // rotas de usuário
 routes.post('/usuarios', UserController.insert)
 routes.post('/usuarios/login', UserController.login)
+routes.put('/usuarios/:id', UserController.update)
 
 module.exports = routes

@@ -32,5 +32,27 @@ module.exports = {
     } catch (err) {
       console.log(err)
     }
+  },
+
+  async update(req, res) {
+    try {
+      const { id } = req.params
+      const { username, nome_completo, data_nascimento, estado, pais } = req.body
+
+      await User.update(
+        {
+          username,
+          nome_completo,
+          data_nascimento,
+          estado,
+          pais
+        },
+        { where: { id } }
+      )
+
+      return res.json({ messege: 'Dados do usuário alterados.' })
+    } catch (err) {
+      console.log(err)
+    }
   }
 }
