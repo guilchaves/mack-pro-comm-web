@@ -1,0 +1,72 @@
+
+# insere dados na tabela usuario
+INSERT INTO usuario (id,  administrador, username, senha, nome_completo, email,	data_nascimento, estado, pais)
+VALUES (1000,	false,	'mil', '123', 'Mil', 'mil@email.com', '1995-01-30', 'SP', 'Brazil'),
+(1010,	false,	'miledez', '123', 'Mil e Dez', 'miledez@email.com', '1972-04-26', 'SP', 'Brazil'),
+(1020,	false,	'milevinte', '123', 'Mil e Vinte', 'milevinte@email.com', '1977-05-08', 'SP', 'Brazil');
+
+# insere dados na tabela Rating
+INSERT INTO rating (id, usuario_id, jogo_id, jogo_id_categoria, comentario, data_avaliacao, nota)
+VALUES (150, 1000, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 2),
+(151, 1000, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 3),
+(152, 1000, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 5),
+(153, 1010, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 5),
+(154, 1010, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 2),
+(155, 1010, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 4),
+(156, 1020, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 3),
+(157, 1020, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 2),
+(158, 1020, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 4);
+
+#cria tabela de avaliações do usuário
+CREATE TABLE user_avgrt (
+  id INTEGER   NOT NULL,
+  usuario_id VARCHAR NOT NULL,
+  jogo_id_categoria INTEGER NOT NULL,
+  media REAL,
+
+PRIMARY KEY(id)
+);
+
+# PROCEDURE calcula média de avaliações para um jogo e salva na tabela JOGo
+CREATE OR REPLACE PROCEDURE calculaMediaJogo(jogo INTEGER)
+AS $$
+
+   UPDATE jogo SET
+   media_rating = (SELECT AVG(nota)::real FROM rating
+                  WHERE jogo_id = $1
+                  GROUP BY rating.jogo_id)
+   WHERE id = $1;
+$$
+LANGUAGE SQL;
+
+# para chamar o PROCEDURE
+call calculaMediaJogo(104);
+
+
+#PROCEDURE calcula a média pra cada categoria que o usuário avaliou
+CREATE OR REPLACE PROCEDURE calculaMediaUsuarioB(usuario VARCHAR, categoria INTEGER)
+AS $$
+DECLARE jatem VARCHAR;
+BEGIN
+   SELECT usuario_id FROM user_avgrt INTO jatem
+   WHERE usuario_id = $1 AND jogo_id_categoria =$2;
+
+IF jatem IS NULL THEN
+       INSERT INTO user_avgrt (usuario_id, jogo_id_categoria, media) VALUES ($1, $2, (SELECT AVG(nota)::real FROM rating WHERE usuario_id = $1 AND jogo_id_categoria = $2));
+
+ELSE
+       UPDATE user_avgrt SET
+       media = (SELECT AVG(nota)::real FROM rating WHERE usuario_id = $1 AND jogo_id_categoria = $2)
+       WHERE usuario_id = $1 AND jogo_id_categoria = $2;
+END IF;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+#para chamar o PROCEDURE:
+call calculaMediaUsuarioB('1000', 2);
+
+#TRIGGER
+CREATE TRIGGER disparaMediaJogo
+   AFTER INSERT ON rating
+   FOR EACH ROW
