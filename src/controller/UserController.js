@@ -3,7 +3,7 @@ const User = require('../models/User')
 module.exports = {
   async login(req, res) {
     try {
-      const { id } = req.params
+      const { id } = req.body
       const user = await User.findByPk(id)
 
       return res.json(user)
@@ -14,8 +14,7 @@ module.exports = {
 
   async insert(req, res) {
     try {
-      const { id } = req.params
-      const { username, nome_completo, data_nascimento, estado, pais } = req.body
+      const { id, username, nome_completo, data_nascimento, estado, pais } = req.body
 
       const newUser = await User.create({
         id,
