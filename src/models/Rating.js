@@ -3,7 +3,9 @@ const { Model, DataTypes } = require('sequelize')
 class Rating extends Model {
   static init(sequelize) {
     super.init({
+      id_jogo_categoria: DataTypes.INTEGER,
       comentario: DataTypes.STRING,
+      data_avaliacao: DataTypes.DATEONLY,
       nota: DataTypes.INTEGER
     }, {
       sequelize,

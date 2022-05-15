@@ -4,12 +4,14 @@ module.exports = {
   async insert(req, res) {
     try {
       const { id_usuario, id_jogo } = req.params
-      const { comentario, nota } = req.body
+      const { id_jogo_categoria, comentario,data_avaliacao, nota } = req.body
 
       console.log(`id_user: ${id_usuario}, id_game: ${id_jogo}`)
       const rating = await Rating.create({
         id_usuario,
         id_jogo,
+        id_jogo_categoria,
+        data_avaliacao,
         comentario,
         nota
       })
