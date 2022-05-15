@@ -3,6 +3,7 @@ const express = require('express')
 const CategoryController = require('./controller/CategoryController')
 const GameController = require('./controller/GameController')
 const UserController = require('./controller/UserController')
+const RatingController = require('./controller/RatingController')
 
 const routes = express.Router()
 
@@ -24,5 +25,11 @@ routes.delete('/jogos/:id', GameController.delete)
 routes.post('/usuarios/login/:id', UserController.login)
 routes.post('/usuarios/:id', UserController.insert)
 routes.put('/usuarios/:id', UserController.update)
+
+// rotas de avaliação
+routes.get('/avaliacoes', RatingController.getAll)
+routes.get('/avaliacoes/:id_jogo', RatingController.getGameRatings)
+routes.post('/avaliacoes/:id_usuario/:id_jogo', RatingController.insert)
+routes.put('/avaliacoes/:id_usuario/:id_jogo', RatingController.update)
 
 module.exports = routes

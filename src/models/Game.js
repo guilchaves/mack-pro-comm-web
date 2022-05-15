@@ -19,6 +19,13 @@ class Game extends Model {
       foreignKey: 'id_categoria',
       as: 'categoria'
     })
+
+    this.belongsToMany(models.User, {
+      through: models.Rating,
+      foreignKey: 'id_jogo'
+    })
+
+    this.hasMany(models.Rating, { foreignKey: 'id_jogo' })
   }
 }
 

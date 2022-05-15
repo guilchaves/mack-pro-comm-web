@@ -14,6 +14,15 @@ class User extends Model {
       tableName: 'usuario'
     })
   }
+
+  static associate(models) {
+    this.belongsToMany(models.Game, {
+      through: models.Rating,
+      foreignKey: 'id_usuario'
+    })
+
+    this.hasMany(models.Rating, { foreignKey: 'id_usuario' })
+  }
 }
 
 module.exports = User
