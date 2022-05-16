@@ -33,11 +33,11 @@ CREATE TABLE jogo (
 PRIMARY KEY(id)
 );
 
-CREATE TABLE rating (
+CREATE TABLE avaliacao (
       id INTEGER   NOT NULL,
       usuario_id VARCHAR NOT NULL,
-      jogo_id INTEGER NOT NULL,
-      jogo_id_categoria INTEGER NOT NULL,
+      id_jogo INTEGER NOT NULL,
+      id_jogo_categoria INTEGER NOT NULL,
       comentario VARCHAR(255),
       data_avaliacao DATE,
       nota INTEGER,
@@ -52,7 +52,7 @@ DROP TABLE usuario;
 
 DROP TABLE jogo;
 
-DROP TABLE rating;
+DROP TABLE avaliacao;
 
 
 # insere dados de teste na tabela usuario
@@ -63,13 +63,9 @@ VALUES (1000,	false,	'mil', '123', 'Mil', 'mil@email.com', '1995-01-30', 'SP', '
 
 
 # insere dados de teste na tabela Rating
-INSERT INTO rating (id, usuario_id, jogo_id, jogo_id_categoria, comentario, data_avaliacao, nota)
-VALUES (150, 1000, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 2),
-(151, 1000, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 3),
-(152, 1000, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 5),
-(153, 1010, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 5),
-(154, 1010, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 2),
-(155, 1010, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 4),
-(156, 1020, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 3),
-(157, 1020, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 2),
-(158, 1020, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 4);
+INSERT INTO avaliacao (id_usuario, id_jogo, id_jogo_categoria, comentario, data_avaliacao, nota)
+VALUES ('google-oauth2|100070715652692879358', 1, 5, 'teste avaliação Prodigy', '2022-05-13', 3),
+('google-oauth2|100070715652692879358', 2, 1, 'teste avaliação Powerline.io', '2022-05-13', 5),
+('google-oauth2|100070715652692879358', 4, 5, 'teste avaliação RuneScape', '2022-05-13', 5),
+('google-oauth2|100070715652692879358', 5, 3, 'teste avaliação NoBrakes.io', '2022-05-13', 2),
+('google-oauth2|100070715652692879358', 7, 7, 'teste avaliação Everybody Edits', '2022-05-13', 4);
