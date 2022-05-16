@@ -55,7 +55,36 @@ período);<br>
 a) O **CommWeb** deverá ser colocado em operação como uma aplicação web.<br>
 b) Os dados do **CommWeb** deverão ser persistidos em uma base de dados (relacional ou NoSQL).<br>
 
-## 4. Integrantes do grupo
+## 4. Instalação local
+
+Para rodar esse projeto localmente, clone ou faça download desse repositório [aqui](https://github.com/guilchaves/comm-web-front.git).
+
+No diretório do projeto, instale as dependências com o comando:
+
+### `npm install`
+
+Rode localmente em sua máquina, utilizando o comando:
+
+### `npm start`
+
+O projeto será inicializado em [http://localhost:3000](http://localhost:3000).
+
+_NOTA: Para que o aplicativo tenha acesso ao banco de dados localmente, é necessária a instalação do backend desse projeto. O mesmo pode ser encontrado nesse [link](https://github.com/guilchaves/mack-pro-comm-web)._
+
+
+### 'Sistema de Recomendação'
+
+O Sistema de Recomendação está baseado no modelo de interação do usuário. O fator escolhido é a nota que o usuário atribui a cada jogo a partir da tela de avaliação. 
+
+O sistema irá calcular a média de notas dos jogos de cada categoria e armazenar essa médias. Depois o sistema irá classifica as três categorias com melhores notas e armazenar em na tabela auxiliar user_avgrt. 
+
+A lista de jogos recomendados será entregue a partir de uma query que identifica os dois jogos melhores avaliados para cada uma das categorias de preferência do usuário, gerando assim uma recomendação alinhada com suas preferências.
+
+O sistema de recomendação foi inicialmente previsto para rodar em Python, considerando termos mais de uma categoria por jogo. Porém, apos revisar os requisitos e ver que temos apenas uma categoria por jogo, o que simplifica a matrix usuário x categoria x jogo optamos por implementar o sistema em SQL no próprio banco de dados. 
+
+Dessa forma, após dar o deploy do front e do back end, é necessário rodar os comando SQL do arquivo database_recomendacao.
+
+## 5. Integrantes do grupo
 
 Alexandre Ricci Preuss - 19508387 <br>
 Guilherme G Chaves - 20014481<br>
