@@ -1,0 +1,97 @@
+
+# Código SQL para gerar o sistema de recomendação CommWeb
+
+# cria tabela de média das avaliações do usuário
+CREATE TABLE user_avgrt (
+  id INTEGER   NOT NULL,
+  usuario_id VARCHAR NOT NULL,
+  jogo_id_categoria INTEGER NOT NULL,
+  media REAL,
+
+PRIMARY KEY(id)
+);
+
+# Cria o PROCEDURE que calcula média de avaliações para um jogo e salva na tabela jogo
+CREATE OR REPLACE PROCEDURE calculaMediaJogo(jogo INTEGER)
+AS $$
+
+   UPDATE jogo SET
+   media_rating = (SELECT AVG(nota)::real FROM rating
+                  WHERE jogo_id = $1
+                  GROUP BY rating.jogo_id)
+   WHERE id = $1;
+$$
+LANGUAGE SQL;
+
+# Código para chamar o PROCEDURE a partir do Backend
+call calculaMediaJogo(104);
+
+
+# Cria o PROCEDURE que calcula a média pra cada categoria que o usuário avaliou e salva na tabela user_avgrt
+CREATE OR REPLACE PROCEDURE calculaMediaUsuarioB(usuario VARCHAR, categoria INTEGER)
+AS $$
+DECLARE jatem VARCHAR;
+BEGIN
+   SELECT usuario_id FROM user_avgrt INTO jatem
+   WHERE usuario_id = $1 AND jogo_id_categoria =$2;
+
+IF jatem IS NULL THEN
+       INSERT INTO user_avgrt (usuario_id, jogo_id_categoria, media) VALUES ($1, $2, (SELECT AVG(nota)::real FROM rating WHERE usuario_id = $1 AND jogo_id_categoria = $2));
+
+ELSE
+       UPDATE user_avgrt SET
+       media = (SELECT AVG(nota)::real FROM rating WHERE usuario_id = $1 AND jogo_id_categoria = $2)
+       WHERE usuario_id = $1 AND jogo_id_categoria = $2;
+END IF;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+# Código para chamar o PROCEDURE a partir do Backend
+call calculaMediaUsuarioB('1000', 2);
+
+
+# Código que cria FUNCIONS para identificar a 1a, 2a e 3a categoria de preferência do usuário pela média das notas das avaliações
+# FUNCION para a 1a categoria
+CREATE OR REPLACE FUNCTION categoria1(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1
+   ORDER BY media DESC
+   LIMIT 1;
+$$
+LANGUAGE SQL;
+
+# FUNCION para a 2a categoria
+CREATE OR REPLACE FUNCTION categoria2(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1 AND (jogo_id_categoria NOT IN (SELECT jogo_id_categoria FROM user_avgrt WHERE user_avgrt.usuario_id = $1 ORDER BY media DESC LIMIT 1))
+   ORDER BY media DESC
+   LIMIT 1;
+$$
+LANGUAGE SQL;
+
+# FUNCION para a 3a categoria
+CREATE OR REPLACE FUNCTION categoria3(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1 AND (jogo_id_categoria NOT IN (SELECT jogo_id_categoria FROM user_avgrt WHERE user_avgrt.usuario_id = $1 ORDER BY media DESC LIMIT 2))
+   ORDER BY media DESC
+   LIMIT 3;
+$$
+LANGUAGE SQL;
+
+#3 Código para QUERY que busca os dois melhores jogos das 3 categorias que o jogador melhor avaliou e retorna 5 jogos como recomendações
+
+(SELECT * FROM jogo
+WHERE id_categoria = categoria1('1000')  ORDER BY media_rating DESC LIMIT 2)
+UNION
+(SELECT * FROM jogo
+WHERE id_categoria = categoria2('1000')  ORDER BY media_rating DESC LIMIT 2)
+UNION
+(SELECT * FROM jogo
+WHERE id_categoria = categoria3('1000')  ORDER BY media_rating DESC LIMIT 1);
