@@ -5,11 +5,14 @@ class Rating extends Model {
     super.init({
       id_jogo_categoria: DataTypes.INTEGER,
       comentario: DataTypes.STRING,
-      data_avaliacao: DataTypes.DATEONLY,
+      data_avaliacao: {
+        type: DataTypes.DATEONLY,
+        defaultValue: DataTypes.NOW
+      },
       nota: DataTypes.INTEGER
     }, {
       sequelize,
-      tableName: 'avaliacao'
+      tableName: 'rating'
     })
   }
 

@@ -7,7 +7,11 @@ class Game extends Model {
       descricao: DataTypes.STRING,
       url_jogo: DataTypes.STRING(150),
       url_imagem: DataTypes.STRING(150),
-      url_demo: DataTypes.STRING(150)
+      url_demo: DataTypes.STRING(150),
+      media_rating: {
+        type: DataTypes.REAL,
+        defaultValue: 0
+      }
     }, {
       sequelize,
       tableName: 'jogo'

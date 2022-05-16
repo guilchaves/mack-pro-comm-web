@@ -35,7 +35,11 @@ module.exports = {
         type: Sequelize.STRING(150),
         allowNull: false
       },
-      url_demo: Sequelize.STRING(150)
+      url_demo: Sequelize.STRING(150),
+      media_rating: {
+        type: Sequelize.REAL,
+        allowNull: false
+      }
     })
   },
 
