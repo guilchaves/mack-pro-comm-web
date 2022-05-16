@@ -1,23 +1,7 @@
 
-# insere dados na tabela usuario
-INSERT INTO usuario (id,  administrador, username, senha, nome_completo, email,	data_nascimento, estado, pais)
-VALUES (1000,	false,	'mil', '123', 'Mil', 'mil@email.com', '1995-01-30', 'SP', 'Brazil'),
-(1010,	false,	'miledez', '123', 'Mil e Dez', 'miledez@email.com', '1972-04-26', 'SP', 'Brazil'),
-(1020,	false,	'milevinte', '123', 'Mil e Vinte', 'milevinte@email.com', '1977-05-08', 'SP', 'Brazil');
+# Código SQL para gerar o sistema de recomendação CommWeb
 
-# insere dados na tabela Rating
-INSERT INTO rating (id, usuario_id, jogo_id, jogo_id_categoria, comentario, data_avaliacao, nota)
-VALUES (150, 1000, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 2),
-(151, 1000, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 3),
-(152, 1000, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 5),
-(153, 1010, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 5),
-(154, 1010, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 2),
-(155, 1010, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 4),
-(156, 1020, 100, 3, 'teste avaliação Subway Clash 2', '2022-05-13', 3),
-(157, 1020, 102, 2, 'teste avaliação Stick Duel Battle', '2022-05-13', 2),
-(158, 1020, 104, 2, 'teste avaliação Wrestle Jump', '2022-05-13', 4);
-
-#cria tabela de avaliações do usuário
+# cria tabela de média das avaliações do usuário
 CREATE TABLE user_avgrt (
   id INTEGER   NOT NULL,
   usuario_id VARCHAR NOT NULL,
@@ -27,7 +11,7 @@ CREATE TABLE user_avgrt (
 PRIMARY KEY(id)
 );
 
-# PROCEDURE calcula média de avaliações para um jogo e salva na tabela JOGo
+# Cria o PROCEDURE que calcula média de avaliações para um jogo e salva na tabela jogo
 CREATE OR REPLACE PROCEDURE calculaMediaJogo(jogo INTEGER)
 AS $$
 
@@ -39,11 +23,11 @@ AS $$
 $$
 LANGUAGE SQL;
 
-# para chamar o PROCEDURE
+# Código para chamar o PROCEDURE a partir do Backend
 call calculaMediaJogo(104);
 
 
-#PROCEDURE calcula a média pra cada categoria que o usuário avaliou
+# Cria o PROCEDURE que calcula a média pra cada categoria que o usuário avaliou e salva na tabela user_avgrt
 CREATE OR REPLACE PROCEDURE calculaMediaUsuarioB(usuario VARCHAR, categoria INTEGER)
 AS $$
 DECLARE jatem VARCHAR;
@@ -63,10 +47,51 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
-#para chamar o PROCEDURE:
+# Código para chamar o PROCEDURE a partir do Backend
 call calculaMediaUsuarioB('1000', 2);
 
-#TRIGGER
-CREATE TRIGGER disparaMediaJogo
-   AFTER INSERT ON rating
-   FOR EACH ROW
+
+# Código que cria FUNCIONS para identificar a 1a, 2a e 3a categoria de preferência do usuário pela média das notas das avaliações
+# FUNCION para a 1a categoria
+CREATE OR REPLACE FUNCTION categoria1(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1
+   ORDER BY media DESC
+   LIMIT 1;
+$$
+LANGUAGE SQL;
+
+# FUNCION para a 2a categoria
+CREATE OR REPLACE FUNCTION categoria2(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1 AND (jogo_id_categoria NOT IN (SELECT jogo_id_categoria FROM user_avgrt WHERE user_avgrt.usuario_id = $1 ORDER BY media DESC LIMIT 1))
+   ORDER BY media DESC
+   LIMIT 1;
+$$
+LANGUAGE SQL;
+
+# FUNCION para a 3a categoria
+CREATE OR REPLACE FUNCTION categoria3(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1 AND (jogo_id_categoria NOT IN (SELECT jogo_id_categoria FROM user_avgrt WHERE user_avgrt.usuario_id = $1 ORDER BY media DESC LIMIT 2))
+   ORDER BY media DESC
+   LIMIT 3;
+$$
+LANGUAGE SQL;
+
+#3 Código para QUERY que busca os dois melhores jogos das 3 categorias que o jogador melhor avaliou e retorna 5 jogos como recomendações
+
+(SELECT * FROM jogo
+WHERE id_categoria = categoria1('1000')  ORDER BY media_rating DESC LIMIT 2)
+UNION
+(SELECT * FROM jogo
+WHERE id_categoria = categoria2('1000')  ORDER BY media_rating DESC LIMIT 2)
+UNION
+(SELECT * FROM jogo
+WHERE id_categoria = categoria3('1000')  ORDER BY media_rating DESC LIMIT 1);

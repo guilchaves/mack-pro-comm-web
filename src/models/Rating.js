@@ -9,6 +9,7 @@ class User extends Model {
     }, {
       sequelize,
       tableName: 'avaliacao'
+      tableName: 'rating'
     })
   }
 }
