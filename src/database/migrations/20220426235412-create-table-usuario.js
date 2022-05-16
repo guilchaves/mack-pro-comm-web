@@ -4,9 +4,13 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('usuario', {
       id: {
-        type: Sequelize.INTERGER,
+        type: Sequelize.STRING(50),
         primaryKey: true,
-        autoIncrement: true,
+        allowNull: false,
+        unique: true
+      },
+      administrador: {
+        type: Sequelize.BOOLEAN,
         allowNull: false
       },
       username: {
@@ -14,7 +18,19 @@ module.exports = {
         unique: true,
         allowNull: false
       },
-      senha: {
+      nome_completo: {
+        type: Sequelize.STRING(50),
+        allowNull: false
+      },
+      data_nascimento: {
+        type: Sequelize.DATEONLY,
+        allowNull: false
+      },
+      estado: {
+        type: Sequelize.STRING(30),
+        allowNull: false
+      },
+      pais: {
         type: Sequelize.STRING(30),
         allowNull: false
       }
