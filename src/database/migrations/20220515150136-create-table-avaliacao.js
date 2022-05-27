@@ -2,7 +2,7 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('rating', {
+    await queryInterface.createTable('avaliacao', {
       id_usuario: {
         type: Sequelize.STRING(50),
         allowNull: false,
@@ -43,6 +43,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('rating');
+    await queryInterface.dropTable('avaliacao');
   }
 };

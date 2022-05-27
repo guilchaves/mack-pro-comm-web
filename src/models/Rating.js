@@ -12,7 +12,7 @@ class Rating extends Model {
       nota: DataTypes.INTEGER
     }, {
       sequelize,
-      tableName: 'rating'
+      tableName: 'avaliacao'
     })
   }
 

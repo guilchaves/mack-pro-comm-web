@@ -28,6 +28,8 @@ routes.put('/usuarios/:id', UserController.update)
 
 // rotas de avaliação
 routes.get('/avaliacoes', RatingController.getAll)
+routes.get('/avaliacoes/:id_jogo', RatingController.getGameRatings)
+routes.get('/avaliacoes/recomendacoes/:id_usuario', RatingController.getRecommendation)
 routes.post('/avaliacoes/:id_usuario/:id_jogo', RatingController.insert)
 routes.put('/avaliacoes/:id_usuario/:id_jogo', RatingController.update)
 

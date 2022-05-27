@@ -1,3 +1,4 @@
+const sequelize = require('../database')
 const Rating = require('../models/Rating')
 
 module.exports = {
@@ -59,6 +60,18 @@ module.exports = {
       })
 
       return res.json({ messege: 'Avaliação alterada' })
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  async getRecommendation(req, res) {
+    try {
+      const { id_usuario } = req.params
+
+      const [recommendations, metadata] = await sequelize.query(`select * from recomendacoes('${id_usuario}')`)
+
+      return res.json(recommendations)
     } catch (err) {
       console.log(err)
     }
