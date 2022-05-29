@@ -40,7 +40,15 @@ module.exports = {
   async getGameRatings(req, res) {
     try {
       const { id_jogo } = req.params
-      const ratings = await Rating.findAll({ where: { id_jogo }})
+      const ratings = await Rating.findAll({
+        where: {
+          id_jogo
+        },
+        include: {
+          association: 'usuario',
+          attributes: ['username']
+        }
+      })
 
       return res.json(ratings)
 
