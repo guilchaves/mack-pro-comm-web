@@ -24,7 +24,12 @@ module.exports = {
 
   async getAll(req, res) {
     try {
-      const ratings = await Rating.findAll()
+      const ratings = await Rating.findAll({
+        include: {
+          association: 'usuario',
+          attributes: ['username']
+        }
+      })
 
       return res.json(ratings)
     } catch (err) {

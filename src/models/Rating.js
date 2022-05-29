@@ -17,7 +17,7 @@ class Rating extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'id_usuario' })
+    this.belongsTo(models.User, { foreignKey: 'id_usuario', as: 'usuario' })
     this.belongsTo(models.Game, { foreignKey: 'id_jogo' })
   }
 }
