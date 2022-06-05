@@ -22,6 +22,7 @@ routes.put('/jogos/:id', GameController.update)
 routes.delete('/jogos/:id', GameController.delete)
 
 // rotas de usuário
+routes.get('/usuarios/:id', UserController.getUser)
 routes.post('/usuarios/login', UserController.login)
 routes.post('/usuarios', UserController.insert)
 routes.put('/usuarios/:id', UserController.update)

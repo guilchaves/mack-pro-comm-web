@@ -1,6 +1,21 @@
 const User = require('../models/User')
 
 module.exports = {
+  async getUser(req, res) {
+    try {
+      const { id } = req.params
+
+      const user = await User.findByPk(id)
+      if (!user) {
+        return res.json({ messege: 'Usuário não encontrado.'})
+      }
+
+      return res.json(user)
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
   async login(req, res) {
     try {
       const { id } = req.body
