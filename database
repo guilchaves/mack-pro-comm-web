@@ -1,98 +1,71 @@
---código usado para criar as tabelas do Banco de Dados da CommWeb
+-- Código de referência para criar as tabelas do Banco de Dados da CommWeb
 
-CREATE TABLE Tab_categoria (
+CREATE TABLE categoria (
   id INTEGER   NOT NULL ,
   nome VARCHAR(120)      ,
-PRIMARY KEY(id));
+PRIMARY KEY(id)
+);
 
 
-CREATE TABLE Tab_usuario (
+CREATE TABLE usuario (
   id INTEGER   NOT NULL ,
+  administrador BOOL      ,
   username VARCHAR(60)    ,
+  nome_completo VARCHAR(120)    ,
+  data_nascimento DATE    ,
   senha VARCHAR(45)    ,
-  estaLogin BOOL      ,
-PRIMARY KEY(id));
-
-
-CREATE TABLE Tab_membro (
-  id INTEGER   NOT NULL ,
-  Tab_usuario_id INTEGER   NOT NULL ,
-  nome VARCHAR(120)    ,
   estado VARCHAR(20)    ,
   pais VARCHAR(20)    ,
   email VARCHAR(60)    ,
-  dataNascimento DATE    ,
-  Administrador BOOL      ,
-PRIMARY KEY(id, Tab_usuario_id),
-  FOREIGN KEY(Tab_usuario_id)
-    REFERENCES Tab_usuario(id));
+PRIMARY KEY(id)
+);
 
 
-CREATE TABLE Tab_jogo (
+CREATE TABLE jogo (
   id INTEGER   NOT NULL ,
-  Tab_categoria_id INTEGER   NOT NULL ,
   nome VARCHAR(60)    ,
+  Tidcategoria INTEGER   NOT NULL ,
   descricao VARCHAR(255)    ,
   url_jogo VARCHAR(120)    ,
   url_imagem VARCHAR(120)      ,
-PRIMARY KEY(id, Tab_categoria_id),
-  FOREIGN KEY(Tab_categoria_id)
-    REFERENCES Tab_categoria(id));
+  url_imagem VARCHAR(120)      ,
+  media_rating REAL   ,
+PRIMARY KEY(id)
+);
 
+CREATE TABLE avaliacao (
+      id INTEGER   NOT NULL,
+      usuario_id VARCHAR NOT NULL,
+      id_jogo INTEGER NOT NULL,
+      id_jogo_categoria INTEGER NOT NULL,
+      comentario VARCHAR(255),
+      data_avaliacao DATE,
+      nota INTEGER,
+PRIMARY KEY(id)
+);
 
-CREATE TABLE Tab_avaliacao (
-  id INTEGER   NOT NULL ,
-  Tab_membro_id INTEGER   NOT NULL ,
-  Tab_jogo_id INTEGER   NOT NULL ,
-  Tab_membro_Tab_usuario_id INTEGER   NOT NULL ,
-  Tab_jogo_Tab_categoria_id INTEGER   NOT NULL ,
-  comentario VARCHAR(255)    ,
-  data_avaliacao DATE    ,
-  nota INTEGER      ,
-PRIMARY KEY(id, Tab_membro_id, Tab_jogo_id, Tab_membro_Tab_usuario_id, Tab_jogo_Tab_categoria_id),
-  FOREIGN KEY(Tab_membro_id, Tab_membro_Tab_usuario_id)
-    REFERENCES Tab_membro(id, Tab_usuario_id),
-  FOREIGN KEY(Tab_jogo_id, Tab_jogo_Tab_categoria_id)
-    REFERENCES Tab_jogo(id, Tab_categoria_id));
-
-
-CREATE TABLE Tab_avaliacao_util (
-  id INTEGER   NOT NULL ,
-  Tab_membro_id INTEGER   NOT NULL ,
-  Tab_avaliacao_id INTEGER   NOT NULL ,
-  Tab_membro_Tab_usuario_id INTEGER   NOT NULL ,
-  Tab_avaliacao_Tab_jogo_id INTEGER   NOT NULL ,
-  Tab_avaliacao_Tab_membro_id INTEGER   NOT NULL ,
-  Tab_jogo_Tab_categoria_id INTEGER   NOT NULL ,
-  eUtil BOOL      ,
-PRIMARY KEY(id, Tab_membro_id, Tab_avaliacao_id, Tab_membro_Tab_usuario_id, Tab_avaliacao_Tab_jogo_id, Tab_avaliacao_Tab_membro_id, Tab_jogo_Tab_categoria_id),
-  FOREIGN KEY(Tab_membro_id, Tab_membro_Tab_usuario_id)
-    REFERENCES Tab_membro(id, Tab_usuario_id),
-  FOREIGN KEY(Tab_avaliacao_id, Tab_avaliacao_Tab_membro_id, Tab_avaliacao_Tab_jogo_id, Tab_membro_Tab_usuario_id, Tab_jogo_Tab_categoria_id)
-    REFERENCES Tab_avaliacao(id, Tab_membro_id, Tab_jogo_id, Tab_membro_Tab_usuario_id, Tab_jogo_Tab_categoria_id));
 
 -- código para dropar as tabelas
-DROP TABLE Tab_avaliacao_util;
+DROP TABLE categoria;
 
-DROP TABLE Tab_avaliacao;
+DROP TABLE usuario;
 
-DROP TABLE Tab_jogo;
+DROP TABLE jogo;
 
-DROP TABLE Tab_membro;
+DROP TABLE avaliacao;
 
-DROP TABLE Tab_usuario;
 
-DROP TABLE Tab_categoria;
+# insere dados de teste na tabela usuario
+INSERT INTO usuario (id,  administrador, username, senha, nome_completo, email,	data_nascimento, estado, pais)
+VALUES (1000,	false,	'mil', '123', 'Mil', 'mil@email.com', '1995-01-30', 'SP', 'Brazil'),
+(1010,	false,	'miledez', '123', 'Mil e Dez', 'miledez@email.com', '1972-04-26', 'SP', 'Brazil'),
+(1020,	false,	'milevinte', '123', 'Mil e Vinte', 'milevinte@email.com', '1977-05-08', 'SP', 'Brazil');
 
---código para INSERT nas tabelas
-INSERT INTO Tab_categoria (id, nome) VALUES(1, 2);
 
-INSERT INTO Tab_jogo (id, Tab_categoria_id, nome, descricao, url_jogo, url_imagem) VALUES(1, 2, 3, 4, 5, 6);
-
-INSERT INTO Tab_usuario (id, username, senha, estaLogin) VALUES(1, 2, 3, 4);
-
-INSERT INTO Tab_membro (id, Tab_usuario_id, nome, estado, pais, email, dataNascimento, Administrador) VALUES(1, 2, 3, 4, 5, 6, 7, 8);
-
-INSERT INTO Tab_avaliacao (id, Tab_membro_id, Tab_jogo_id, Tab_membro_Tab_usuario_id, Tab_jogo_Tab_categoria_id, comentario, data_avaliacao, nota) VALUES(1, 2, 3, 4, 5, 6, 7, 8);
-
-INSERT INTO Tab_avaliacao_util (id, Tab_membro_id, Tab_avaliacao_id, Tab_membro_Tab_usuario_id, Tab_avaliacao_Tab_jogo_id, Tab_avaliacao_Tab_membro_id, Tab_jogo_Tab_categoria_id, eUtil) VALUES(1, 2, 3, 4, 5, 6, 7, 8);
+# insere dados de teste na tabela Rating
+INSERT INTO avaliacao (id_usuario, id_jogo, id_jogo_categoria, comentario, data_avaliacao, nota)
+VALUES ('google-oauth2|100070715652692879358', 1, 5, 'teste avaliação Prodigy', '2022-05-13', 3),
+('google-oauth2|100070715652692879358', 2, 1, 'teste avaliação Powerline.io', '2022-05-13', 5),
+('google-oauth2|100070715652692879358', 4, 5, 'teste avaliação RuneScape', '2022-05-13', 5),
+('google-oauth2|100070715652692879358', 5, 3, 'teste avaliação NoBrakes.io', '2022-05-13', 2),
+('google-oauth2|100070715652692879358', 7, 7, 'teste avaliação Everybody Edits', '2022-05-13', 4);
