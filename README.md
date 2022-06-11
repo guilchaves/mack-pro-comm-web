@@ -55,7 +55,58 @@ período);<br>
 a) O **CommWeb** deverá ser colocado em operação como uma aplicação web.<br>
 b) Os dados do **CommWeb** deverão ser persistidos em uma base de dados (relacional ou NoSQL).<br>
 
-## 4. Integrantes do grupo
+## 4. Instalação local Backend
+
+Para rodar o backend desse projeto localmente é necessário baixar ou clonar os arquivos deste repositório [link](https://github.com/guilchaves/mack-pro-comm-web) em uma máquina com Node.js.
+Primeiramente, deve-se abrir a pasta raiz do projeto e digitar via terminal a seguinte linha de comando:
+### `npm install`
+ou caso tenha instalado o gerenciador de pacotes yarn, pode utilizar também:
+### `yarn install`
+esses comandos instalam as dependências necessárias para o uso projeto. 
+Após completar a instalação das dependências, criar um arquivo chamado **.env** na pasta raiz do projeto. Este arquivo deve conter as seguintes informações das variáveis de ambiente que são utilizadas no projeto.
+
+    HOST = endereço do servidor (localhost, se testado localmente)*
+    USER = usuário do banco de dados*
+    PASSWORD = senha do banco de dados*
+    DATABASE = nome da base de dados*
+    * para os dados reais do servidor deste projeto ver PDF do Aplicando 5.
+
+_NOTA: Para publicar o **Frontend** localmente utilize os arquivos e siga as orientações desse repositório [link](https://github.com/guilchaves/comm-web-front)._
+
+### 4.1 Banco de dados
+No terminal, usar um dos seguintes comando para criar o banco de dados, caso ainda não tenha criado:
+### `npx sequelize-cli db:create`
+### `npx sequelize db:create`
+### `yarn sequelize-cli db:create`
+### `yarn sequelize db:create`
+
+O banco criado com um desses comando utiliza o nome que estiver na variável DATABASE.
+
+Após criado o banco, é necessário criar as tabelas, que são criadas via terminal com um dos seguintes comandos:
+### `npx sequelize-cli db:migrate`
+### `npx sequelize db:migrate`
+### `yarn sequelize-cli db:migrate`
+### `yarn sequelize db:migrate`
+
+Após terminada configuração do banco de dados, se caso for testar localmente, o servidor pode ser iniciado com um dos seguintes códigos no terminal
+### `npm start`
+### `yarn start`
+com isso, o servidor do backend estará funcionando no endereço **http://localhost:8080**
+
+
+### 4.2 Sistema de Recomendação
+
+O Sistema de Recomendação está baseado no modelo de interação do usuário. O fator escolhido é a nota que o usuário atribui a cada jogo a partir da tela de avaliação. 
+
+O sistema irá calcular a média de notas dos jogos de cada categoria e armazenar essa médias. Depois o sistema irá classifica as três categorias com melhores notas e armazenar em na tabela auxiliar user_avgrt. 
+
+A lista de jogos recomendados será entregue a partir de uma query que identifica os dois jogos melhores avaliados para cada uma das categorias de preferência do usuário, gerando assim uma recomendação alinhada com suas preferências.
+
+O sistema de recomendação foi inicialmente previsto para rodar em Python, considerando termos mais de uma categoria por jogo. Porém, apos revisar os requisitos e ver que temos apenas uma categoria por jogo, o que simplifica a matrix usuário x categoria x jogo optamos por implementar o sistema em SQL no próprio banco de dados. 
+
+Dessa forma, após dar implantar o backende e o frontend é necessário rodar os comandos SQL na sequência do arquivo **database_recomendacao**.
+
+## 5. Integrantes do grupo
 
 Alexandre Ricci Preuss - 19508387 <br>
 Guilherme G Chaves - 20014481<br>
