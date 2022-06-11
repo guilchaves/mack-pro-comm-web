@@ -1,0 +1,121 @@
+
+# Código SQL para gerar o sistema de recomendação CommWeb
+
+# cria tabela de média das avaliações do usuário
+CREATE TABLE user_avgrt (
+  id INTEGER   NOT NULL,
+  usuario_id VARCHAR NOT NULL,
+  jogo_id_categoria INTEGER NOT NULL,
+  media REAL,
+
+PRIMARY KEY(id)
+);
+
+
+## FUNÇÕES PARA ATUALIZAR AS TABELAS AUTOMATICAMENTE
+# Cria a Função para calcular media jogo com trigger
+CREATE OR REPLACE FUNCTION calculaMediaJogoT() RETURNS TRIGGER
+AS $$
+BEGIN
+   UPDATE jogo SET
+   media_rating = (SELECT AVG(nota)::real FROM avaliacao
+                  WHERE id_jogo = NEW.id_jogo
+                  GROUP BY avaliacao.id_jogo)
+   WHERE id = NEW.id_jogo;
+   RETURN NEW;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+# Cria o Trigger para a função da media do jogo
+CREATE TRIGGER disparaMediaJogo AFTER INSERT ON avaliacao
+   FOR EACH ROW EXECUTE FUNCTION calculaMediaJogoT();
+
+# Cria a Função para calcular a média da categoria para um usuário e salva na user_avgrt
+CREATE OR REPLACE FUNCTION calculaMediaUsuarioT() RETURNS TRIGGER
+AS $$
+DECLARE jatem VARCHAR;
+BEGIN
+   SELECT usuario_id FROM user_avgrt INTO jatem
+   WHERE usuario_id = NEW.id_usuario AND jogo_id_categoria = NEW.id_jogo_categoria;
+
+   IF jatem IS NULL THEN
+       INSERT INTO user_avgrt (usuario_id, jogo_id_categoria, media) VALUES (NEW.id_usuario, NEW.id_jogo_categoria, (SELECT AVG(nota)::real FROM avaliacao WHERE id_usuario = NEW.id_usuario AND id_jogo_categoria = NEW.id_jogo_categoria));
+
+   ELSE
+       UPDATE user_avgrt SET
+       media = (SELECT AVG(nota)::real FROM avaliacao WHERE id_usuario = NEW.id_usuario AND id_jogo_categoria = NEW.id_jogo_categoria)
+       WHERE usuario_id = NEW.id_usuario AND jogo_id_categoria = NEW.id_jogo_categoria;
+   END IF;
+RETURN NEW;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+# Cria o Trigger para a função da media do usuário
+CREATE TRIGGER disparaMediaUsuario AFTER INSERT ON avaliacao
+   FOR EACH ROW EXECUTE FUNCTION calculaMediaUsuarioT();
+
+## FUNÇÕES AUXILIARES PARA CONSTRUÇÃO DA FUNÇÃO DE RECOMENDAÇÃO
+# Código que cria FUNCIONS para identificar a 1a, 2a e 3a categoria de preferência do usuário pela média das notas das avaliações
+# FUNCION para a 1a categoria
+CREATE OR REPLACE FUNCTION categoria1(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1
+   ORDER BY media DESC
+   LIMIT 1;
+$$
+LANGUAGE SQL;
+
+# FUNCION para a 2a categoria
+CREATE OR REPLACE FUNCTION categoria2(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1 AND (jogo_id_categoria NOT IN (SELECT jogo_id_categoria FROM user_avgrt WHERE user_avgrt.usuario_id = $1 ORDER BY media DESC LIMIT 1))
+   ORDER BY media DESC
+   LIMIT 1;
+$$
+LANGUAGE SQL;
+
+# FUNCION para a 3a categoria
+CREATE OR REPLACE FUNCTION categoria3(usuario_id VARCHAR)
+RETURNS INTEGER AS $$
+   SELECT jogo_id_categoria
+   FROM user_avgrt
+   WHERE user_avgrt.usuario_id = $1 AND (jogo_id_categoria NOT IN (SELECT jogo_id_categoria FROM user_avgrt WHERE user_avgrt.usuario_id = $1 ORDER BY media DESC LIMIT 2))
+   ORDER BY media DESC
+   LIMIT 3;
+$$
+LANGUAGE SQL;
+
+
+
+## FUNÇÃO QUE RETORNA AS RECOMENDAÇÕES
+
+CREATE OR REPLACE FUNCTION recomendacoes(usuario_id VARCHAR) RETURNS TABLE(pri INTEGER, id  INTEGER, nome	VARCHAR, id_categoria INTEGER,	descricao VARCHAR,	url_jogo VARCHAR, url_imagem VARCHAR, url_demo VARCHAR, media_rating REAL)
+AS $$
+  (((SELECT 1 as pri, id, nome, id_categoria, descricao, url_jogo, url_imagem, url_demo, media_rating FROM jogo
+  WHERE id_categoria = categoria1($1) AND id NOT IN (SELECT id_jogo FROM avaliacao WHERE id_usuario = $1)
+  ORDER BY media_rating DESC LIMIT 2)
+  UNION
+  (SELECT 2 as pri, id, nome, id_categoria, descricao, url_jogo, url_imagem, url_demo, media_rating FROM jogo
+  WHERE id_categoria = categoria2($1)  AND id NOT IN (SELECT id_jogo FROM avaliacao WHERE id_usuario = $1)
+  ORDER BY media_rating DESC LIMIT 2)
+  UNION
+  (SELECT 3 as pri, id, nome, id_categoria, descricao, url_jogo, url_imagem, url_demo, media_rating FROM jogo
+  WHERE id_categoria = categoria3($1)  AND id NOT IN (SELECT id_jogo FROM avaliacao WHERE id_usuario = $1)
+  ORDER BY media_rating DESC LIMIT 1))
+  UNION
+  (SELECT 4 as pri, id, nome, id_categoria, descricao, url_jogo, url_imagem, url_demo, media_rating FROM JOGO
+   ORDER BY media_rating DESC LIMIT 5))
+  ORDER BY pri
+  LIMIT 5;
+
+$$
+LANGUAGE SQL;
+
+# Para chamar as recomendaçòes
+SELECT * FROM recomendacoes(id_usuario)
