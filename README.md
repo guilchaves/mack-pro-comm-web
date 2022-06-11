@@ -98,13 +98,13 @@ com isso, o servidor do backend estará funcionando no endereço **http://localh
 
 O Sistema de Recomendação está baseado no modelo de interação do usuário. O fator escolhido é a nota que o usuário atribui a cada jogo a partir da tela de avaliação. 
 
-O sistema irá calcular a média de notas dos jogos de cada categoria e armazenar essa médias. Depois o sistema irá classifica as três categorias com melhores notas e armazenar em na tabela auxiliar user_avgrt. 
+O sistema irá calcular a média de notas dos jogos de cada categoria e armazenar essa médias. Depois o sistema irá classificar as três categorias com melhores notas e armazenar em na tabela auxiliar **user_avgrt**. 
 
-A lista de jogos recomendados será entregue a partir de uma query que identifica os dois jogos melhores avaliados para cada uma das categorias de preferência do usuário, gerando assim uma recomendação alinhada com suas preferências.
+O sistema de recomendação foi inicialmente previsto para rodar em Python, considerando a existência de mais de uma categoria por jogo. Porém, após revisar os requisitos e ver que inicialmente seria apenas uma categoria por jogo, o que simplifica a matrix usuário x categoria x jogo, optamos por implementar o sistema por meio de funções e triggers em SQL no próprio banco de dados PostgreeSQL. 
 
-O sistema de recomendação foi inicialmente previsto para rodar em Python, considerando termos mais de uma categoria por jogo. Porém, apos revisar os requisitos e ver que temos apenas uma categoria por jogo, o que simplifica a matrix usuário x categoria x jogo optamos por implementar o sistema em SQL no próprio banco de dados. 
+A lista de jogos recomendados será entregue a partir de uma função ( recomendacoes() ) que identifica os dois jogos melhores avaliados para cada uma das categorias de preferência do usuário, gerando assim uma lista de recomendações com dois jogos para cada uma das duas categorias preferidas de cada usuário e ainda mais um jogo da terceira categorias. Enquanto o usuário não realizar avaliações o sistema irá preencher as recomendações com os jogos que tem a maior média de avaliações.
 
-Dessa forma, após dar implantar o backende e o frontend é necessário rodar os comandos SQL na sequência do arquivo **database_recomendacao**.
+Dessa forma, após dar implantar o backend e o frontend é necessário rodar os códigos em SQL na sequência do arquivo **database_recomendacao**.
 
 ## 5. Integrantes do grupo
 
